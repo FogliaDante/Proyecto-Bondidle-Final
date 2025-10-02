@@ -1,114 +1,123 @@
 import React, { useEffect, useState } from 'react';
-import { getRecorridoQuestion, postRecorridoAnswer } from '../api/games';
+import { getRecorridoQuestion, postRecorridoAnswer, searchColectivos, getRamales } from '../api/games';
 import { useI18n } from '../i18n';
 
 export default function RecorridoGame() {
     const { t, lang } = useI18n();
-    // -------------------------
-    // 🧩 Estados principales
-    // -------------------------
-    const [q, setQ] = useState<{ questionId: number; imageUrl: string } | null>(null); // pregunta actual (id + imagen)
-    const [numero, setNumero] = useState('');       // input del número de colectivo
-    const [ramalNombre, setRamalNombre] = useState(''); // input del ramal
-    const [result, setResult] = useState<string | null>(null); // resultado de la respuesta
-    const [isCorrect, setIsCorrect] = useState<boolean | null>(null); // si la respuesta fue correcta
+
+    // Estados principales
+    const [q, setQ] = useState<{ questionId: number; imageUrl: string } | null>(null);
+    const [numero, setNumero] = useState('');
+    const [ramalNombre, setRamalNombre] = useState('');
+    const [result, setResult] = useState<string | null>(null);
+    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [hasError, setHasError] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const [usedBranches, setUsedBranches] = useState<Set<string>>(new Set()); // ramales ya utilizados
+    const [usedBranches, setUsedBranches] = useState<Set<string>>(new Set());
 
-    // Lista de ramales comunes para autocompletar (puedes expandir esta lista)
-    const [commonBranches] = useState<string[]>([
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-    ]);
+    // Estados para búsqueda de colectivos y ramales
+    const [colectivos, setColectivos] = useState<any[]>([]);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [ramales, setRamales] = useState<any[]>([]);
 
-    // -------------------------
-    // 🔄 Función para cargar nueva pregunta
-    // -------------------------
+    // Función para cargar nueva pregunta
     const load = async () => {
         try {
             const r = await getRecorridoQuestion();
             setQ(r);
-            // resetear estado de inputs y resultado
+            // Resetear estado
             setResult(null);
             setIsCorrect(null);
             setNumero('');
             setRamalNombre('');
             setHasError(false);
             setErrorMessage('');
-            setUsedBranches(new Set()); // Limpiar ramales usados para nueva pregunta
+            setUsedBranches(new Set());
+            setColectivos([]);
+            setSelectedId(null);
+            setRamales([]);
         } catch {
-            setQ(null); // si falla, no hay pregunta disponible
+            setQ(null);
         }
     };
 
-    // -------------------------
-    // ⏳ Efecto inicial: cargar primera pregunta
-    // -------------------------
+    // Efecto inicial
     useEffect(() => { load(); }, []);
 
-    // -------------------------
-    // 🔄 Efecto para recalcular mensaje cuando cambia el idioma
-    // -------------------------
+    // Efecto para buscar colectivos por número
+    useEffect(() => {
+        if (numero.length >= 1) { // Buscar desde el primer carácter
+            let alive = true;
+            searchColectivos(numero).then(list => { if (alive) setColectivos(list); });
+            return () => { alive = false; };
+        } else {
+            setColectivos([]);
+        }
+    }, [numero]);
+
+    // Efecto para obtener ramales del colectivo seleccionado
+    useEffect(() => {
+        if (selectedId) {
+            getRamales(selectedId).then(setRamales);
+            setUsedBranches(new Set());
+        } else {
+            setRamales([]);
+            setUsedBranches(new Set());
+        }
+    }, [selectedId]);
+
+    // Efecto para traducir resultado
     useEffect(() => {
         if (isCorrect !== null) {
             setResult(isCorrect ? t('route.correct') : t('route.incorrect'));
         }
     }, [lang, isCorrect, t]);
 
-    // -------------------------
-    // 🎯 Función principal: enviar respuesta
-    // -------------------------
+    // Función principal: enviar respuesta
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!q) return; // seguridad si no hay pregunta cargada
+        if (!q) return;
 
-        // Limpiar estados anteriores
         setResult(null);
         setIsCorrect(null);
         setHasError(false);
         setErrorMessage('');
 
-        // Validar que se haya ingresado un número
+        // Validaciones
         if (!numero || numero.trim() === '') {
             setHasError(true);
             setErrorMessage(t('route.selectNumber'));
             return;
         }
 
-        // Validar que se haya ingresado un ramal
         if (!ramalNombre || ramalNombre.trim() === '') {
             setHasError(true);
             setErrorMessage(t('route.selectBranch'));
             return;
         }
 
-        // Validar que el ramal no haya sido utilizado ya
         if (usedBranches.has(ramalNombre.trim())) {
             setHasError(true);
             setErrorMessage(t('route.branchAlreadyUsed'));
             return;
         }
 
-        // mandar respuesta al backend
+        // Enviar respuesta
         const { correct } = await postRecorridoAnswer({
             questionId: q.questionId,
             numero: Number(numero),
             ramalNombre: ramalNombre || undefined
         });
 
-        // actualizar feedback en pantalla
         setIsCorrect(correct);
 
-        // Agregar el ramal utilizado al conjunto de ramales usados si no fue correcto
-        if (ramalNombre && ramalNombre.trim() !== '' && !correct) {
+        // Agregar ramal a usados si no fue correcto
+        if (!correct) {
             setUsedBranches(prev => new Set(prev).add(ramalNombre));
         }
     };
 
-    // -------------------------
-    // 🎨 Render principal
-    // -------------------------
+    // Render principal
     return (
         <div className="container">
             <div className="card">
@@ -131,42 +140,70 @@ export default function RecorridoGame() {
                             value={numero}
                             onChange={e => {
                                 setNumero(e.target.value);
-                                setHasError(false); // Limpiar error al escribir
+                                setHasError(false);
                                 setErrorMessage('');
+                                setSelectedId(null);
+                                setRamales([]);
+                                setColectivos([]);
                             }}
                             placeholder={t('route.numberPlaceholder')}
                         />
+
+                        {/* Sugerencias de colectivos */}
+                        {colectivos.length > 0 && (
+                            <div style={{ marginTop: 4 }}>
+                                {colectivos
+                                    .filter(c => c.numero.toString().startsWith(numero))
+                                    .slice(0, 5)
+                                    .map(c => (
+                                        <button
+                                            key={c.id_colectivo}
+                                            type="button"
+                                            className="btn btn-small"
+                                            style={{ marginRight: 4, marginBottom: 4 }}
+                                            onClick={() => {
+                                                setNumero(c.numero.toString());
+                                                setSelectedId(c.id_colectivo);
+                                                setColectivos([]);
+                                                setRamales([]);
+                                            }}
+                                        >
+                                            {c.numero}
+                                        </button>
+                                    ))}
+                            </div>
+                        )}
                     </div>
 
-                    {/* Input ramal */}
+                    {/* Selector de ramal */}
                     <div className="col-6">
                         <label>{t('route.branchLabel')}</label>
-                        <input
+                        <select
                             className="input"
                             value={ramalNombre}
                             onChange={e => {
                                 setRamalNombre(e.target.value);
-                                setHasError(false); // Limpiar error al escribir
+                                setHasError(false);
                                 setErrorMessage('');
                             }}
-                            placeholder={t('route.branchPlaceholder')}
-                            list="available-branches"
-                            style={{
-                                backgroundColor: usedBranches.has(ramalNombre) ? '#ffebee' : 'white'
-                            }}
-                        />
-                        <datalist id="available-branches">
-                            {commonBranches
-                                .filter(branch => !usedBranches.has(branch))
-                                .map(branch => (
-                                    <option key={branch} value={branch} />
+                            disabled={!selectedId}
+                        >
+                            <option value="">
+                                {selectedId ? t('classic.selectBranch') : t('route.selectBusFirst')}
+                            </option>
+                            {ramales
+                                .filter((r: any) => !usedBranches.has(r.nombre_ramal))
+                                .map((r: any) => (
+                                    <option key={r.id_ramal} value={r.nombre_ramal}>{r.nombre_ramal}</option>
                                 ))}
-                        </datalist>
-                        {usedBranches.has(ramalNombre) && ramalNombre && (
-                            <small style={{ color: '#ff6b81', fontSize: '12px' }}>
-                                {t('route.branchUsedHint')}
-                            </small>
-                        )}
+                            {ramales
+                                .filter((r: any) => usedBranches.has(r.nombre_ramal))
+                                .map((r: any) => (
+                                    <option key={r.id_ramal} value={r.nombre_ramal} disabled style={{ opacity: 0.5 }}>
+                                        {r.nombre_ramal} ({t('classic.branchUsed')})
+                                    </option>
+                                ))}
+                        </select>
                     </div>
 
                     {/* Botones */}
@@ -179,9 +216,9 @@ export default function RecorridoGame() {
                 {/* Mensaje de error */}
                 {hasError && (
                     <p style={{ color: '#ff6b81', marginTop: 8 }}>
-                        {errorMessage === 'Este ramal ya fue utilizado en esta pregunta.' 
-                          ? errorMessage 
-                          : errorMessage}
+                        {errorMessage.startsWith('Este ramal')
+                            ? errorMessage
+                            : t(errorMessage)}
                     </p>
                 )}
 

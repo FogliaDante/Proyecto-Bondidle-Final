@@ -89,6 +89,7 @@ const resources: Record<Lang, Dict> = {
     'route.selectBranch': 'Ingresá un ramal.',
     'route.branchAlreadyUsed': 'Este ramal ya fue utilizado en esta pregunta.',
     'route.branchUsedHint': 'Este ramal ya fue utilizado',
+    'route.selectBusFirst': 'Primero elegí un colectivo',
 
     // Zona
     'zone.CABA': 'CABA',
@@ -197,6 +198,7 @@ const resources: Record<Lang, Dict> = {
     'route.selectBranch': 'Enter a branch.',
     'route.branchAlreadyUsed': 'This branch has already been used in this question.',
     'route.branchUsedHint': 'This branch has already been used',
+    'route.selectBusFirst': 'First choose a bus',
 
     // Zona
     'zone.CABA': 'CABA',
