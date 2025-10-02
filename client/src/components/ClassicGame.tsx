@@ -25,7 +25,7 @@ export default function ClassicGame() {
   const [ramalNombre, setRamalNombre] = useState<string>(''); // ramal seleccionado
   const [attempts, setAttempts] = useState<Attempt[]>([]); // intentos previos
   const [hasError, setHasError] = useState<boolean>(false);
-  const [errorType, setErrorType] = useState<'selectBus' | 'guessNotFound' | null>(null);
+  const [errorType, setErrorType] = useState<'selectBus' | 'guessNotFound' | 'selectBranch' | null>(null);
   const [isGameWon, setIsGameWon] = useState<boolean>(false); // estado de victoria
 
   // -------------------------
@@ -84,7 +84,14 @@ export default function ClassicGame() {
 
       if (!colectivoEncontrado) {
         setHasError(true);
-        setErrorType('guessNotFound');
+        setErrorType('selectBus');
+        return;
+      }
+
+      // Verificar que se haya seleccionado un ramal
+      if (!ramalNombre || ramalNombre.trim() === '') {
+        setHasError(true);
+        setErrorType('selectBranch');
         return;
       }
 
@@ -251,7 +258,11 @@ export default function ClassicGame() {
           {/* Columna 2: seleccionar ramal */}
           <div className="col-6">
             <label>{t('classic.branchLabel')}</label>
-            <select className="input" value={ramalNombre} onChange={e => setRamalNombre(e.target.value)}>
+            <select className="input" value={ramalNombre} onChange={e => {
+              setRamalNombre(e.target.value);
+              setHasError(false); // Limpiar error al cambiar ramal
+              setErrorType(null);
+            }}>
               <option value="">{t('classic.anyBranch')}</option>
               {ramales.map((r: any) => (
                 <option key={r.id_ramal} value={r.nombre_ramal}>{r.nombre_ramal}</option>
@@ -268,6 +279,8 @@ export default function ClassicGame() {
               <p style={{ color: '#ff6b81' }}>
                 {errorType === 'selectBus' 
                   ? (t('classic.selectBus') || 'Elegí un colectivo.')
+                  : errorType === 'selectBranch'
+                  ? (t('classic.selectBranch') || 'Elegí un ramal.')
                   : (t('classic.guessNotFound') || 'No se encontró ese colectivo/ramal')
                 }
               </p>

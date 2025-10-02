@@ -47,6 +47,7 @@ const resources: Record<Lang, Dict> = {
     'classic.noAttempts': 'Aún no hay intentos.',
     'classic.selectBus': 'Elegí un colectivo.',
     'classic.guessNotFound': 'No se encontró ese colectivo/ramal',
+    'classic.selectBranch': 'Elegí un ramal.',
     'classic.victory.title': '¡Felicitaciones! 🎊',
     'classic.victory.message': '¡Adivinaste el colectivo y su ramal correctamente!',
     'classic.victory.nextGame': '🚀 Jugar Recorrido',
@@ -82,6 +83,8 @@ const resources: Record<Lang, Dict> = {
     'route.anotherImage': 'Otra imagen',
     'route.correct': '¡Correcto!',
     'route.incorrect': 'Incorrecto',
+    'route.selectNumber': 'Ingresá un número de colectivo.',
+    'route.selectBranch': 'Ingresá un ramal.',
 
     // Zona
     'zone.CABA': 'CABA',
@@ -148,6 +151,7 @@ const resources: Record<Lang, Dict> = {
     'classic.noAttempts': 'No attempts yet.',
     'classic.selectBus': 'Choose a bus.',
     'classic.guessNotFound': 'Bus/branch not found',
+    'classic.selectBranch': 'Choose a branch.',
     'classic.victory.title': 'Congratulations! 🎊',
     'classic.victory.message': 'You guessed the bus and its branch correctly!',
     'classic.victory.nextGame': '🚀 Play Route',
@@ -183,6 +187,8 @@ const resources: Record<Lang, Dict> = {
     'route.anotherImage': 'Another image',
     'route.correct': 'Correct!',
     'route.incorrect': 'Incorrect',
+    'route.selectNumber': 'Enter a bus number.',
+    'route.selectBranch': 'Enter a branch.',
 
     // Zona
     'zone.CABA': 'CABA',

@@ -12,6 +12,8 @@ export default function RecorridoGame() {
     const [ramalNombre, setRamalNombre] = useState(''); // input del ramal
     const [result, setResult] = useState<string | null>(null); // resultado de la respuesta
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null); // si la respuesta fue correcta
+    const [hasError, setHasError] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     // -------------------------
     // 🔄 Función para cargar nueva pregunta
@@ -25,6 +27,8 @@ export default function RecorridoGame() {
             setIsCorrect(null);
             setNumero('');
             setRamalNombre('');
+            setHasError(false);
+            setErrorMessage('');
         } catch {
             setQ(null); // si falla, no hay pregunta disponible
         }
@@ -50,8 +54,26 @@ export default function RecorridoGame() {
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!q) return; // seguridad si no hay pregunta cargada
+
+        // Limpiar estados anteriores
         setResult(null);
         setIsCorrect(null);
+        setHasError(false);
+        setErrorMessage('');
+
+        // Validar que se haya ingresado un número
+        if (!numero || numero.trim() === '') {
+            setHasError(true);
+            setErrorMessage(t('route.selectNumber'));
+            return;
+        }
+
+        // Validar que se haya ingresado un ramal
+        if (!ramalNombre || ramalNombre.trim() === '') {
+            setHasError(true);
+            setErrorMessage(t('route.selectBranch'));
+            return;
+        }
 
         // mandar respuesta al backend
         const { correct } = await postRecorridoAnswer({
@@ -87,7 +109,11 @@ export default function RecorridoGame() {
                         <input
                             className="input"
                             value={numero}
-                            onChange={e => setNumero(e.target.value)}
+                            onChange={e => {
+                                setNumero(e.target.value);
+                                setHasError(false); // Limpiar error al escribir
+                                setErrorMessage('');
+                            }}
                             placeholder={t('route.numberPlaceholder')}
                         />
                     </div>
@@ -98,7 +124,11 @@ export default function RecorridoGame() {
                         <input
                             className="input"
                             value={ramalNombre}
-                            onChange={e => setRamalNombre(e.target.value)}
+                            onChange={e => {
+                                setRamalNombre(e.target.value);
+                                setHasError(false); // Limpiar error al escribir
+                                setErrorMessage('');
+                            }}
                             placeholder={t('route.branchPlaceholder')}
                         />
                     </div>
@@ -110,8 +140,15 @@ export default function RecorridoGame() {
                     </div>
                 </form>
 
+                {/* Mensaje de error */}
+                {hasError && (
+                    <p style={{ color: '#ff6b81', marginTop: 8 }}>{errorMessage}</p>
+                )}
+
                 {/* Feedback del resultado */}
-                {result && <p style={{ marginTop: 8 }}>{result}</p>}
+                {result && (
+                    <p style={{ marginTop: 8, color: isCorrect ? '#00ff00' : '#ff6b81' }}>{result}</p>
+                )}
             </div>
         </div>
     );
