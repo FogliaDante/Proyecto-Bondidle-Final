@@ -1,0 +1,65 @@
+# ==========================
+# DEPENDENCIAS
+# ==========================
+node_modules/
+
+# ==========================
+# BUILD Y COMPILACIÓN
+# ==========================
+dist/
+build/
+.vite/
+*.tsbuildinfo
+.eslintcache
+
+# ==========================
+# VARIABLES DE ENTORNO
+# ==========================
+.env
+.env.*
+!.env.example
+
+# ==========================
+# LOGS
+# ==========================
+logs/
+*.log
+*.log.*
+
+# ==========================
+# COVERAGE Y TESTING
+# ==========================
+coverage/
+.nyc_output/
+
+# ==========================
+# BASE DE DATOS
+# ==========================
+*.db
+*.sqlite*
+*.db-journal
+dump.sql
+prisma/*.db
+
+# ==========================
+# ARCHIVOS TEMPORALES
+# ==========================
+tmp/
+temp/
+uploads/
+storage/
+
+# ==========================
+# SISTEMA OPERATIVO
+# ==========================
+.DS_Store
+Thumbs.db
+
+# ==========================
+# IDEs Y EDITORES
+# ==========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
