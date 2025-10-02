@@ -143,16 +143,55 @@ export default function ClassicGame() {
             const zoneText = g.zona ? t(`zone.${g.zona}`) : '—';
             return (
               <div key={i} className="card" style={{ marginBottom: 8 }}>
-                {/* Badges con feedback */}
-                <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
-                  <span className={`badge ${f.numero}`}>{g.numero ?? '—'}</span>
-                  <span className={`badge ${f.ramal}`}>{g.ramalNombre || '—'}</span>
-                  <span className={`badge ${f.empresa}`}>{g.empresas?.length ? g.empresas.join(', ') : '—'}</span>
-                  <span className={`badge ${f.colores}`}>{g.colores?.length ? g.colores.join(', ') : '—'}</span>
-                  <span className={`badge ${f.terminal_inicio}`}>{g.inicio || '—'}</span>
-                  <span className={`badge ${f.terminal_final}`}>{g.final || '—'}</span>
-                  <span className={`badge ${f.zona}`}>{zoneText}</span>
-                  <span className={`badge ${f.anio}`}>{g.anio_creacion ?? '—'} {arrow(f.anioDirection)}</span>
+                {/* Encabezados y badges organizados en columnas */}
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {/* Número */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: 0.6 }}>{t('classic.header.number')}</span>
+                    <span className={`badge ${f.numero}`}>{g.numero ?? '—'}</span>
+                  </div>
+                  
+                  {/* Ramal */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: 0.6 }}>{t('classic.header.branch')}</span>
+                    <span className={`badge ${f.ramal}`}>{g.ramalNombre || '—'}</span>
+                  </div>
+                  
+                  {/* Empresa */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: 0.6 }}>{t('classic.header.company')}</span>
+                    <span className={`badge ${f.empresa}`}>{g.empresas?.length ? g.empresas.join(', ') : '—'}</span>
+                  </div>
+                  
+                  {/* Colores */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: 0.6 }}>{t('classic.header.colors')}</span>
+                    <span className={`badge ${f.colores}`}>{g.colores?.length ? g.colores.join(', ') : '—'}</span>
+                  </div>
+                  
+                  {/* Terminal Inicio */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: 0.6 }}>{t('classic.header.startTerminal')}</span>
+                    <span className={`badge ${f.terminal_inicio}`}>{g.inicio || '—'}</span>
+                  </div>
+                  
+                  {/* Terminal Final */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: 0.6 }}>{t('classic.header.endTerminal')}</span>
+                    <span className={`badge ${f.terminal_final}`}>{g.final || '—'}</span>
+                  </div>
+                  
+                  {/* Zona */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: 0.6 }}>{t('classic.header.zone')}</span>
+                    <span className={`badge ${f.zona}`}>{zoneText}</span>
+                  </div>
+                  
+                  {/* Año */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: 0.6 }}>{t('classic.header.year')}</span>
+                    <span className={`badge ${f.anio}`}>{g.anio_creacion ?? '—'} {arrow(f.anioDirection)}</span>
+                  </div>
                 </div>
 
                 {/* Lista de hints */}

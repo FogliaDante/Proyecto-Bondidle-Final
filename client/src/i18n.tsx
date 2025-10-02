@@ -46,6 +46,16 @@ const resources: Record<Lang, Dict> = {
     'classic.attempts': 'Intentos',
     'classic.noAttempts': 'Aún no hay intentos.',
 
+    // Encabezados de columnas del juego clásico
+    'classic.header.number': 'Número',
+    'classic.header.branch': 'Ramal',
+    'classic.header.company': 'Empresa',
+    'classic.header.colors': 'Colores',
+    'classic.header.startTerminal': 'Terminal Inicio',
+    'classic.header.endTerminal': 'Terminal Final',
+    'classic.header.zone': 'Zona',
+    'classic.header.year': 'Año',
+
     // Hints (claves internas)
     'hints.number_diff': 'El número es diferente.',
     'hints.ramal_mismatch_after_num': 'Adivinaste el número, pero el ramal no.',
@@ -103,6 +113,16 @@ const resources: Record<Lang, Dict> = {
     'classic.try': 'Try',
     'classic.attempts': 'Attempts',
     'classic.noAttempts': 'No attempts yet.',
+
+    // Column headers for classic game
+    'classic.header.number': 'Number',
+    'classic.header.branch': 'Branch',
+    'classic.header.company': 'Company',
+    'classic.header.colors': 'Colors',
+    'classic.header.startTerminal': 'Start Terminal',
+    'classic.header.endTerminal': 'End Terminal',
+    'classic.header.zone': 'Zone',
+    'classic.header.year': 'Year',
 
     // Hints
     'hints.number_diff': 'The number is different.',
