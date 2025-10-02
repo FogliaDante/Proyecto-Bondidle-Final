@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getClassicToday, postClassicGuess, searchColectivos, getRamales } from '../api/games';
 import type { ClassicFeedback, ClassicGuessView } from '../typings';
 import { useI18n } from '../i18n';
@@ -11,6 +12,7 @@ export default function ClassicGame() {
   // 🔤 Internacionalización
   // -------------------------
   const { t, trHintKeyFromText, trColor, lang } = useI18n();
+  const navigate = useNavigate();
 
   // -------------------------
   // 🧩 Estados principales del juego
@@ -24,6 +26,7 @@ export default function ClassicGame() {
   const [attempts, setAttempts] = useState<Attempt[]>([]); // intentos previos
   const [hasError, setHasError] = useState<boolean>(false);
   const [errorType, setErrorType] = useState<'selectBus' | 'guessNotFound' | null>(null);
+  const [isGameWon, setIsGameWon] = useState<boolean>(false); // estado de victoria
 
   // -------------------------
   // ⏳ Efecto 1: obtener puzzle del día
@@ -99,9 +102,16 @@ export default function ClassicGame() {
       // actualizar lista de intentos (máx. 8 visibles)
       setAttempts(prev => [{ feedback, guess }, ...prev].slice(0, 8));
 
-      // Limpiar error después de intento exitoso
-      setHasError(false);
-      setErrorType(null);
+      // Verificar si se ganó el juego (numero y ramal correctos)
+      if (feedback.numero === 'green' && feedback.ramal === 'green') {
+        setIsGameWon(true);
+        setHasError(false); // Limpiar errores al ganar
+        setErrorType(null);
+      } else {
+        // Limpiar error después de intento exitoso pero no ganador
+        setHasError(false);
+        setErrorType(null);
+      }
     } catch (err: any) {
       setHasError(true);
       setErrorType('guessNotFound');
@@ -137,10 +147,72 @@ export default function ClassicGame() {
   // -------------------------
   return (
     <div className="container">
+      <style>{`
+        @keyframes bounce {
+          0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-10px); }
+          60% { transform: translateY(-5px); }
+        }
+      `}</style>
       <div className="card">
         <h2>{t('classic.title', { date: formatDate(puzzleKey) || '...' })}</h2>
 
-        {/* Formulario de búsqueda y selección */}
+        {/* Pantalla de victoria */}
+        {isGameWon && (
+          <div style={{
+            textAlign: 'center',
+            padding: '40px 20px',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderRadius: '12px',
+            marginBottom: '24px',
+            color: 'white'
+          }}>
+            <div style={{
+              fontSize: '60px',
+              marginBottom: '16px',
+              animation: 'bounce 1s ease-in-out infinite'
+            }}>
+              🎉 🚍 ✨
+            </div>
+            <h2 style={{
+              margin: '16px 0',
+              fontSize: '28px',
+              fontWeight: 'bold'
+            }}>
+              ¡Felicitaciones! 🎊
+            </h2>
+            <p style={{
+              fontSize: '18px',
+              margin: '16px 0 24px',
+              opacity: 0.9
+            }}>
+              ¡Adivinaste el colectivo y su ramal correctamente!
+            </p>
+            <button
+              className="btn"
+              onClick={() => navigate('/recorrido')}
+              style={{
+                background: 'white',
+                color: '#667eea',
+                padding: '12px 32px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              🚀 Jugar Recorrido
+            </button>
+          </div>
+        )}
+
+        {/* Formulario de búsqueda y selección - ocultar cuando se gana */}
+        {!isGameWon && (
         <form className="grid" onSubmit={onGuess} style={{ marginTop: 12 }}>
           {/* Columna 1: buscar colectivo */}
           <div className="col-6">
@@ -202,6 +274,7 @@ export default function ClassicGame() {
             )}
           </div>
         </form>
+        )}
       </div>
 
       {/* Historial de intentos */}
