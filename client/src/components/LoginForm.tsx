@@ -7,7 +7,7 @@ import { useI18n } from '../i18n';
 export default function LoginForm() {
   const { t } = useI18n();
   const [email, setEmail] = useState(''); const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [hasError, setHasError] = useState<boolean>(false);
   const { login, token } = useAuth(); const nav = useNavigate();
 
   // Si ya hay token, redirigir al home
@@ -16,18 +16,21 @@ export default function LoginForm() {
   }
 
   const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); setError(null);
+    e.preventDefault(); 
+    setHasError(false);
     try {
       const { token, user } = await apiLogin({ email, password });
       login(user, token); nav('/');
-    } catch { setError(t('error.credentials')); }
+    } catch { 
+      setHasError(true);
+    }
   };
 
   return (
     <div className="container">
       <div className="card" style={{ maxWidth: 420, margin: '0 auto' }}>
         <h2>{t('login.title')}</h2>
-        {error && <p style={{ color: '#ff6b81' }}>{error}</p>}
+        {hasError && <p style={{ color: '#ff6b81' }}>{t('error.credentials')}</p>}
         <form onSubmit={onSubmit}>
           <label>{t('login.email')}</label>
           <input className="input" type="email" value={email} onChange={e => setEmail(e.target.value)} />

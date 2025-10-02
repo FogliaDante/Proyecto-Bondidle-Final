@@ -22,7 +22,8 @@ export default function ClassicGame() {
   const [ramales, setRamales] = useState<any[]>([]);      // lista de ramales del colectivo
   const [ramalNombre, setRamalNombre] = useState<string>(''); // ramal seleccionado
   const [attempts, setAttempts] = useState<Attempt[]>([]); // intentos previos
-  const [error, setError] = useState<string | null>(null); // error en validación o búsqueda
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [errorType, setErrorType] = useState<'selectBus' | 'guessNotFound' | null>(null);
 
   // -------------------------
   // ⏳ Efecto 1: obtener puzzle del día
@@ -38,7 +39,12 @@ export default function ClassicGame() {
   // -------------------------
   useEffect(() => {
     let alive = true;
-    if (!term) { setColectivos([]); return; }
+    if (!term) {
+      setColectivos([]);
+      setHasError(false); // Limpiar error cuando se borra el input
+      setErrorType(null);
+      return;
+    }
     searchColectivos(term).then(list => { if (alive) setColectivos(list); });
     return () => { alive = false; };
   }, [term]);
@@ -55,26 +61,55 @@ export default function ClassicGame() {
   // 🎯 Función principal: enviar intento
   // -------------------------
   const onGuess = async (e: React.FormEvent) => {
-    e.preventDefault(); setError(null);
+    e.preventDefault();
+    setHasError(false);
+    setErrorType(null);
+
     try {
-      // obtener número de colectivo desde el seleccionado
-      const numero = Number((colectivos.find(c => c.id_colectivo === selectedId) || {}).numero);
-      if (!numero) {
-        setError(t('classic.selectBus') || 'Elegí un colectivo.');
+      // Convertir el término a número
+      const numero = Number(term);
+
+      // Validar que sea un número válido
+      if (isNaN(numero) || numero <= 0) {
+        setHasError(true);
+        setErrorType('selectBus');
         return;
       }
+
+      // Buscar si el número coincide con algún colectivo disponible
+      const colectivoEncontrado = colectivos.find(c => c.numero === numero);
+
+      if (!colectivoEncontrado) {
+        setHasError(true);
+        setErrorType('guessNotFound');
+        return;
+      }
+
+      // Si encontramos el colectivo, usarlo automáticamente
+      if (colectivoEncontrado && colectivoEncontrado.id_colectivo !== selectedId) {
+        setSelectedId(colectivoEncontrado.id_colectivo);
+      }
+
       // enviar guess al backend
-      const { feedback, guess } = await postClassicGuess({ numero, ramalNombre: ramalNombre || undefined });
+      const { feedback, guess } = await postClassicGuess({
+        numero,
+        ramalNombre: ramalNombre || undefined
+      });
+
       // actualizar lista de intentos (máx. 8 visibles)
       setAttempts(prev => [{ feedback, guess }, ...prev].slice(0, 8));
+
+      // Limpiar error después de intento exitoso
+      setHasError(false);
+      setErrorType(null);
     } catch (err: any) {
-      setError(t('classic.guessNotFound') || 'No se encontró ese colectivo/ramal');
+      setHasError(true);
+      setErrorType('guessNotFound');
     }
   };
 
   // -------------------------
   // 🔼 Flechitas para pistas de año
-  // -------------------------
   const arrow = (dir: 'up' | 'down' | null) => dir === 'up' ? '↑' : dir === 'down' ? '↓' : '';
 
   // -------------------------
@@ -114,7 +149,11 @@ export default function ClassicGame() {
               className="input"
               placeholder={t('classic.numberPlaceholder')}
               value={term}
-              onChange={e => setTerm(e.target.value)}
+              onChange={e => {
+                setTerm(e.target.value);
+                setHasError(false); // Limpiar error al escribir
+                setErrorType(null);
+              }}
             />
             {/* Resultados de búsqueda */}
             <div style={{ maxHeight: 160, overflow: 'auto', marginTop: 8 }}>
@@ -123,7 +162,12 @@ export default function ClassicGame() {
                   <button
                     type="button"
                     className="btn"
-                    onClick={() => { setSelectedId(c.id_colectivo); setTerm(String(c.numero)); }}
+                    onClick={() => {
+                      setSelectedId(c.id_colectivo);
+                      setTerm(String(c.numero));
+                      setHasError(false); // Limpiar error al seleccionar colectivo
+                      setErrorType(null);
+                    }}
                   >
                     #{c.numero}
                   </button>
@@ -148,7 +192,14 @@ export default function ClassicGame() {
             </div>
 
             {/* Mensaje de error */}
-            {error && <p style={{ color: '#ff6b81' }}>{error}</p>}
+            {hasError && (
+              <p style={{ color: '#ff6b81' }}>
+                {errorType === 'selectBus' 
+                  ? (t('classic.selectBus') || 'Elegí un colectivo.')
+                  : (t('classic.guessNotFound') || 'No se encontró ese colectivo/ramal')
+                }
+              </p>
+            )}
           </div>
         </form>
       </div>
