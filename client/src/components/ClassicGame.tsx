@@ -10,7 +10,7 @@ export default function ClassicGame() {
   // -------------------------
   // 🔤 Internacionalización
   // -------------------------
-  const { t, trHintKeyFromText, trColor } = useI18n();
+  const { t, trHintKeyFromText, trColor, lang } = useI18n();
 
   // -------------------------
   // 🧩 Estados principales del juego
@@ -78,12 +78,32 @@ export default function ClassicGame() {
   const arrow = (dir: 'up' | 'down' | null) => dir === 'up' ? '↑' : dir === 'down' ? '↓' : '';
 
   // -------------------------
+  // 📅 Formateo de fechas según idioma
+  // -------------------------
+  const formatDate = (dateStr: string) => {
+    if (!dateStr || dateStr === '...' || dateStr === '') return dateStr;
+
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return dateStr;
+
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = String(date.getFullYear()).slice(-2);
+
+      return lang === 'en' ? `${month}/${day}/${year}` : `${day}/${month}/${year}`;
+    } catch {
+      return dateStr;
+    }
+  };
+
+  // -------------------------
   // 🎨 Render principal
   // -------------------------
   return (
     <div className="container">
       <div className="card">
-        <h2>{t('classic.title', { date: puzzleKey || '...' })}</h2>
+        <h2>{t('classic.title', { date: formatDate(puzzleKey) || '...' })}</h2>
 
         {/* Formulario de búsqueda y selección */}
         <form className="grid" onSubmit={onGuess} style={{ marginTop: 12 }}>
