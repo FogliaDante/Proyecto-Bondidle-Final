@@ -66,6 +66,18 @@ const resources: Record<Lang, Dict> = {
     'hints.year_newer': 'El correcto es más nuevo.',
     'hints.year_older': 'El correcto es más viejo.',
 
+    'route.title': 'Recorrido — Adiviná por la imagen',
+    'route.alt': 'Recorrido',
+    'route.noImage': 'No hay imagen disponible.',
+    'route.numberLabel': 'Número',
+    'route.branchLabel': 'Ramal',
+    'route.numberPlaceholder': 'Ej: 110',
+    'route.branchPlaceholder': 'Ej: A',
+    'route.submit': 'Responder',
+    'route.anotherImage': 'Otra imagen',
+    'route.correct': '¡Correcto!',
+    'route.incorrect': 'Incorrecto',
+
     // Zona
     'zone.CABA': 'CABA',
     'zone.Provincia': 'Provincia',
@@ -133,6 +145,18 @@ const resources: Record<Lang, Dict> = {
     'hints.zone_diff': 'Different zone (CABA/Province/AMBA).',
     'hints.year_newer': 'The correct one is newer.',
     'hints.year_older': 'The correct one is older.',
+
+    'route.title': 'Route — Guess by the image',
+    'route.alt': 'Route',
+    'route.noImage': 'No image available.',
+    'route.numberLabel': 'Number',
+    'route.branchLabel': 'Branch',
+    'route.numberPlaceholder': 'Ex: 60',
+    'route.branchPlaceholder': 'Ex: A',
+    'route.submit': 'Submit',
+    'route.anotherImage': 'Another image',
+    'route.correct': 'Correct!',
+    'route.incorrect': 'Incorrect',
 
     // Zona
     'zone.CABA': 'CABA',
