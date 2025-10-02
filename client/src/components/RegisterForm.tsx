@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { apiRegister } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
 import { useI18n } from '../i18n';
@@ -8,7 +8,12 @@ export default function RegisterForm() {
   const { t } = useI18n();
   const [nombre, setNombre] = useState(''); const [email, setEmail] = useState(''); const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const { login } = useAuth(); const nav = useNavigate();
+  const { login, token } = useAuth(); const nav = useNavigate();
+
+  // Si ya hay token, redirigir al home
+  if (token) {
+    return <Navigate to="/" replace />;
+  }
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setError(null);
