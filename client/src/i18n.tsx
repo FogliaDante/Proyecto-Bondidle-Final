@@ -47,6 +47,9 @@ const resources: Record<Lang, Dict> = {
     'classic.noAttempts': 'Aún no hay intentos.',
     'classic.selectBus': 'Elegí un colectivo.',
     'classic.guessNotFound': 'No se encontró ese colectivo/ramal',
+    'classic.victory.title': '¡Felicitaciones! 🎊',
+    'classic.victory.message': '¡Adivinaste el colectivo y su ramal correctamente!',
+    'classic.victory.nextGame': '🚀 Jugar Recorrido',
 
     // Encabezados de columnas del juego clásico
     'classic.header.number': 'Número',
@@ -145,6 +148,9 @@ const resources: Record<Lang, Dict> = {
     'classic.noAttempts': 'No attempts yet.',
     'classic.selectBus': 'Choose a bus.',
     'classic.guessNotFound': 'Bus/branch not found',
+    'classic.victory.title': 'Congratulations! 🎊',
+    'classic.victory.message': 'You guessed the bus and its branch correctly!',
+    'classic.victory.nextGame': '🚀 Play Route',
 
     // Column headers for classic game
     'classic.header.number': 'Number',

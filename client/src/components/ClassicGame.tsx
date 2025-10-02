@@ -179,14 +179,14 @@ export default function ClassicGame() {
               fontSize: '28px',
               fontWeight: 'bold'
             }}>
-              ¡Felicitaciones! 🎊
+              {t('classic.victory.title')}
             </h2>
             <p style={{
               fontSize: '18px',
               margin: '16px 0 24px',
               opacity: 0.9
             }}>
-              ¡Adivinaste el colectivo y su ramal correctamente!
+              {t('classic.victory.message')}
             </p>
             <button
               className="btn"
@@ -206,7 +206,7 @@ export default function ClassicGame() {
               onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
               onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
-              🚀 Jugar Recorrido
+              {t('classic.victory.nextGame')}
             </button>
           </div>
         )}
