@@ -86,7 +86,7 @@ export default function RecorridoGame() {
         // Validar que el ramal no haya sido utilizado ya
         if (usedBranches.has(ramalNombre.trim())) {
             setHasError(true);
-            setErrorMessage('Este ramal ya fue utilizado en esta pregunta.');
+            setErrorMessage(t('route.branchAlreadyUsed'));
             return;
         }
 
@@ -164,7 +164,7 @@ export default function RecorridoGame() {
                         </datalist>
                         {usedBranches.has(ramalNombre) && ramalNombre && (
                             <small style={{ color: '#ff6b81', fontSize: '12px' }}>
-                                Este ramal ya fue utilizado
+                                {t('route.branchUsedHint')}
                             </small>
                         )}
                     </div>

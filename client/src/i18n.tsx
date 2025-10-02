@@ -48,6 +48,8 @@ const resources: Record<Lang, Dict> = {
     'classic.selectBus': 'Elegí un colectivo.',
     'classic.guessNotFound': 'No se encontró ese colectivo/ramal',
     'classic.selectBranch': 'Elegí un ramal.',
+    'classic.branchAlreadyUsed': 'Este ramal ya fue utilizado.',
+    'classic.branchUsed': 'usado',
     'classic.victory.title': '¡Felicitaciones! 🎊',
     'classic.victory.message': '¡Adivinaste el colectivo y su ramal correctamente!',
     'classic.victory.nextGame': '🚀 Jugar Recorrido',
@@ -85,6 +87,8 @@ const resources: Record<Lang, Dict> = {
     'route.incorrect': 'Incorrecto',
     'route.selectNumber': 'Ingresá un número de colectivo.',
     'route.selectBranch': 'Ingresá un ramal.',
+    'route.branchAlreadyUsed': 'Este ramal ya fue utilizado en esta pregunta.',
+    'route.branchUsedHint': 'Este ramal ya fue utilizado',
 
     // Zona
     'zone.CABA': 'CABA',
@@ -152,6 +156,8 @@ const resources: Record<Lang, Dict> = {
     'classic.selectBus': 'Choose a bus.',
     'classic.guessNotFound': 'Bus/branch not found',
     'classic.selectBranch': 'Choose a branch.',
+    'classic.branchAlreadyUsed': 'This branch has already been used.',
+    'classic.branchUsed': 'used',
     'classic.victory.title': 'Congratulations! 🎊',
     'classic.victory.message': 'You guessed the bus and its branch correctly!',
     'classic.victory.nextGame': '🚀 Play Route',
@@ -189,6 +195,8 @@ const resources: Record<Lang, Dict> = {
     'route.incorrect': 'Incorrect',
     'route.selectNumber': 'Enter a bus number.',
     'route.selectBranch': 'Enter a branch.',
+    'route.branchAlreadyUsed': 'This branch has already been used in this question.',
+    'route.branchUsedHint': 'This branch has already been used',
 
     // Zona
     'zone.CABA': 'CABA',

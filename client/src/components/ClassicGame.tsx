@@ -292,7 +292,7 @@ export default function ClassicGame() {
                 .filter((r: any) => usedBranches.has(r.nombre_ramal))
                 .map((r: any) => (
                   <option key={r.id_ramal} value={r.nombre_ramal} disabled style={{ opacity: 0.5 }}>
-                    {r.nombre_ramal} (usado)
+                    {r.nombre_ramal} ({t('classic.branchUsed')})
                   </option>
                 ))}
             </select>
@@ -308,7 +308,7 @@ export default function ClassicGame() {
                 {errorType === 'selectBus' 
                   ? (t('classic.selectBus') || 'Elegí un colectivo.')
                   : errorType === 'selectBranch' && usedBranches.has(ramalNombre)
-                  ? 'Este ramal ya fue utilizado.'
+                  ? (t('classic.branchAlreadyUsed') || 'Este ramal ya fue utilizado.')
                   : errorType === 'selectBranch'
                   ? (t('classic.selectBranch') || 'Elegí un ramal.')
                   : (t('classic.guessNotFound') || 'No se encontró ese colectivo/ramal')
