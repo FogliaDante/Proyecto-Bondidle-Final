@@ -82,6 +82,22 @@ const resources: Record<Lang, Dict> = {
     'zone.CABA': 'CABA',
     'zone.Provincia': 'Provincia',
     'zone.AMBA': 'AMBA',
+
+    // Colores de colectivos
+    'color.red': 'Rojo',
+    'color.blue': 'Azul',
+    'color.green': 'Verde',
+    'color.yellow': 'Amarillo',
+    'color.orange': 'Naranja',
+    'color.white': 'Blanco',
+    'color.black': 'Negro',
+    'color.gray': 'Gris',
+    'color.purple': 'Violeta',
+    'color.brown': 'Marrón',
+    'color.pink': 'Rosa',
+    'color.light_blue': 'Celeste',
+    'color.dark_green': 'Verde oscuro',
+    'color.beige': 'Beige',
   },
 
   en: {
@@ -162,6 +178,22 @@ const resources: Record<Lang, Dict> = {
     'zone.CABA': 'CABA',
     'zone.Provincia': 'Province',
     'zone.AMBA': 'AMBA',
+
+    // Colores de colectivos
+    'color.red': 'Red',
+    'color.blue': 'Blue',
+    'color.green': 'Green',
+    'color.yellow': 'Yellow',
+    'color.orange': 'Orange',
+    'color.white': 'White',
+    'color.black': 'Black',
+    'color.gray': 'Gray',
+    'color.purple': 'Purple',
+    'color.brown': 'Brown',
+    'color.pink': 'Pink',
+    'color.light_blue': 'Light Blue',
+    'color.dark_green': 'Dark Green',
+    'color.beige': 'Beige',
   }
 };
 
@@ -170,12 +202,14 @@ type Ctx = {
   setLang: (l: Lang) => void;
   t: (key: string, vars?: Record<string, string | number>) => string;
   trHintKeyFromText: (txt: string) => string; // mapea frases existentes a claves
+  trColor: (colorName: string) => string; // traduce nombres de colores
 };
 
 const I18nContext = createContext<Ctx>({
   lang: 'es', setLang: () => { },
   t: (k) => k,
   trHintKeyFromText: (s) => s,
+  trColor: (c) => c, // función por defecto que devuelve el color sin traducir
 });
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
@@ -206,7 +240,39 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return map[txt] || txt; // si no la reconoce, devuelve el texto tal cual
   };
 
-  const value = useMemo(() => ({ lang, setLang, t, trHintKeyFromText }), [lang]);
+  // Traduce nombres de colores según el idioma actual
+  const trColor = (colorName: string) => {
+    // Si el color está vacío, devolver vacío
+    if (!colorName || colorName === '—') return colorName;
+
+    // Mapeo de colores del español al inglés
+    const spanishToEnglish: Record<string, string> = {
+      'azul': 'blue',
+      'amarillo': 'yellow',
+      'blanco': 'white',
+      'rojo': 'red',
+      'naranja': 'orange',
+      'celeste': 'light_blue',
+      'beige': 'beige',
+      'marrón': 'brown',
+      'verde': 'green',
+      'negro': 'black',
+      'gris': 'gray',
+    };
+
+    const normalizedColor = colorName.toLowerCase().trim();
+
+    // Si estamos en inglés, convertir colores del español al inglés
+    if (lang === 'en') {
+      const englishColor = spanishToEnglish[normalizedColor];
+      return englishColor ? t(`color.${englishColor}`) : colorName;
+    }
+
+    // Si estamos en español, los colores ya están en español
+    return colorName;
+  };
+
+  const value = useMemo(() => ({ lang, setLang, t, trHintKeyFromText, trColor }), [lang]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

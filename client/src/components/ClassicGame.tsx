@@ -10,7 +10,7 @@ export default function ClassicGame() {
   // -------------------------
   // 🔤 Internacionalización
   // -------------------------
-  const { t, trHintKeyFromText } = useI18n();
+  const { t, trHintKeyFromText, trColor } = useI18n();
 
   // -------------------------
   // 🧩 Estados principales del juego
@@ -166,7 +166,9 @@ export default function ClassicGame() {
                   {/* Colores */}
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                     <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: 0.6 }}>{t('classic.header.colors')}</span>
-                    <span className={`badge ${f.colores}`}>{g.colores?.length ? g.colores.join(', ') : '—'}</span>
+                    <span className={`badge ${f.colores}`}>
+                      {g.colores?.length ? g.colores.map(color => trColor(color)).join(', ') : '—'}
+                    </span>
                   </div>
                   
                   {/* Terminal Inicio */}
