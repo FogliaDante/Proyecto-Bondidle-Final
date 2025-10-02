@@ -27,6 +27,7 @@ export default function ClassicGame() {
   const [hasError, setHasError] = useState<boolean>(false);
   const [errorType, setErrorType] = useState<'selectBus' | 'guessNotFound' | 'selectBranch' | null>(null);
   const [isGameWon, setIsGameWon] = useState<boolean>(false); // estado de victoria
+  const [usedBranches, setUsedBranches] = useState<Set<string>>(new Set()); // ramales ya utilizados
 
   // -------------------------
   // ⏳ Efecto 1: obtener puzzle del día
@@ -56,8 +57,13 @@ export default function ClassicGame() {
   // ⏳ Efecto 3: obtener ramales de un colectivo seleccionado
   // -------------------------
   useEffect(() => {
-    if (selectedId) getRamales(selectedId).then(setRamales);
-    else setRamales([]);
+    if (selectedId) {
+      getRamales(selectedId).then(setRamales);
+      setUsedBranches(new Set()); // Limpiar ramales usados al cambiar de colectivo
+    } else {
+      setRamales([]);
+      setUsedBranches(new Set()); // Limpiar ramales usados si no hay colectivo seleccionado
+    }
   }, [selectedId]);
 
   // -------------------------
@@ -95,6 +101,13 @@ export default function ClassicGame() {
         return;
       }
 
+      // Verificar que el ramal no haya sido utilizado ya
+      if (usedBranches.has(ramalNombre.trim())) {
+        setHasError(true);
+        setErrorType('selectBranch');
+        return;
+      }
+
       // Si encontramos el colectivo, usarlo automáticamente
       if (colectivoEncontrado && colectivoEncontrado.id_colectivo !== selectedId) {
         setSelectedId(colectivoEncontrado.id_colectivo);
@@ -109,11 +122,17 @@ export default function ClassicGame() {
       // actualizar lista de intentos (máx. 8 visibles)
       setAttempts(prev => [{ feedback, guess }, ...prev].slice(0, 8));
 
+      // Agregar el ramal utilizado al conjunto de ramales usados
+      if (ramalNombre && ramalNombre.trim() !== '') {
+        setUsedBranches(prev => new Set(prev).add(ramalNombre));
+      }
+
       // Verificar si se ganó el juego (numero y ramal correctos)
       if (feedback.numero === 'green' && feedback.ramal === 'green') {
         setIsGameWon(true);
         setHasError(false); // Limpiar errores al ganar
         setErrorType(null);
+        setUsedBranches(new Set()); // Limpiar ramales usados al ganar
       } else {
         // Limpiar error después de intento exitoso pero no ganador
         setHasError(false);
@@ -264,9 +283,18 @@ export default function ClassicGame() {
               setErrorType(null);
             }}>
               <option value="">{t('classic.anyBranch')}</option>
-              {ramales.map((r: any) => (
-                <option key={r.id_ramal} value={r.nombre_ramal}>{r.nombre_ramal}</option>
-              ))}
+              {ramales
+                .filter((r: any) => !usedBranches.has(r.nombre_ramal))
+                .map((r: any) => (
+                  <option key={r.id_ramal} value={r.nombre_ramal}>{r.nombre_ramal}</option>
+                ))}
+              {ramales
+                .filter((r: any) => usedBranches.has(r.nombre_ramal))
+                .map((r: any) => (
+                  <option key={r.id_ramal} value={r.nombre_ramal} disabled style={{ opacity: 0.5 }}>
+                    {r.nombre_ramal} (usado)
+                  </option>
+                ))}
             </select>
 
             {/* Botón de probar intento */}
@@ -279,6 +307,8 @@ export default function ClassicGame() {
               <p style={{ color: '#ff6b81' }}>
                 {errorType === 'selectBus' 
                   ? (t('classic.selectBus') || 'Elegí un colectivo.')
+                  : errorType === 'selectBranch' && usedBranches.has(ramalNombre)
+                  ? 'Este ramal ya fue utilizado.'
                   : errorType === 'selectBranch'
                   ? (t('classic.selectBranch') || 'Elegí un ramal.')
                   : (t('classic.guessNotFound') || 'No se encontró ese colectivo/ramal')

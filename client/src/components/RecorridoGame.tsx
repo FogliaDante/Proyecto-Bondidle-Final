@@ -14,6 +14,13 @@ export default function RecorridoGame() {
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null); // si la respuesta fue correcta
     const [hasError, setHasError] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [usedBranches, setUsedBranches] = useState<Set<string>>(new Set()); // ramales ya utilizados
+
+    // Lista de ramales comunes para autocompletar (puedes expandir esta lista)
+    const [commonBranches] = useState<string[]>([
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+    ]);
 
     // -------------------------
     // 🔄 Función para cargar nueva pregunta
@@ -29,6 +36,7 @@ export default function RecorridoGame() {
             setRamalNombre('');
             setHasError(false);
             setErrorMessage('');
+            setUsedBranches(new Set()); // Limpiar ramales usados para nueva pregunta
         } catch {
             setQ(null); // si falla, no hay pregunta disponible
         }
@@ -75,6 +83,13 @@ export default function RecorridoGame() {
             return;
         }
 
+        // Validar que el ramal no haya sido utilizado ya
+        if (usedBranches.has(ramalNombre.trim())) {
+            setHasError(true);
+            setErrorMessage('Este ramal ya fue utilizado en esta pregunta.');
+            return;
+        }
+
         // mandar respuesta al backend
         const { correct } = await postRecorridoAnswer({
             questionId: q.questionId,
@@ -84,6 +99,11 @@ export default function RecorridoGame() {
 
         // actualizar feedback en pantalla
         setIsCorrect(correct);
+
+        // Agregar el ramal utilizado al conjunto de ramales usados si no fue correcto
+        if (ramalNombre && ramalNombre.trim() !== '' && !correct) {
+            setUsedBranches(prev => new Set(prev).add(ramalNombre));
+        }
     };
 
     // -------------------------
@@ -130,7 +150,23 @@ export default function RecorridoGame() {
                                 setErrorMessage('');
                             }}
                             placeholder={t('route.branchPlaceholder')}
+                            list="available-branches"
+                            style={{
+                                backgroundColor: usedBranches.has(ramalNombre) ? '#ffebee' : 'white'
+                            }}
                         />
+                        <datalist id="available-branches">
+                            {commonBranches
+                                .filter(branch => !usedBranches.has(branch))
+                                .map(branch => (
+                                    <option key={branch} value={branch} />
+                                ))}
+                        </datalist>
+                        {usedBranches.has(ramalNombre) && ramalNombre && (
+                            <small style={{ color: '#ff6b81', fontSize: '12px' }}>
+                                Este ramal ya fue utilizado
+                            </small>
+                        )}
                     </div>
 
                     {/* Botones */}
@@ -142,7 +178,11 @@ export default function RecorridoGame() {
 
                 {/* Mensaje de error */}
                 {hasError && (
-                    <p style={{ color: '#ff6b81', marginTop: 8 }}>{errorMessage}</p>
+                    <p style={{ color: '#ff6b81', marginTop: 8 }}>
+                        {errorMessage === 'Este ramal ya fue utilizado en esta pregunta.' 
+                          ? errorMessage 
+                          : errorMessage}
+                    </p>
                 )}
 
                 {/* Feedback del resultado */}
