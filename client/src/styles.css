@@ -1,9 +1,11 @@
 :root {
-    --bg: #0f0f12;
-    --card: #17171b;
-    --text: #f8f8f8;
-    --muted: #a1a1aa;
-    --accent: #ff2b6a;
+    --bg: #e6f3ff; /* Celeste clarito */
+    --card: #ffffff; /* Blanco */
+    --text: #333333; /* Texto oscuro para contraste */
+    --muted: #666666; /* Gris medio */
+    --accent: #ff2b6a; /* Rosa/magenta */
+    --celeste-medio: #4a90e2; /* Celeste medio oscurito */
+    --amarillo: #ffd700; /* Amarillo */
 }
 
 * {
@@ -17,9 +19,14 @@ body {
     color: var(--text);
 }
 
-a {
-    color: var(--accent);
+.nav a {
+    color: #333333; /* Texto oscuro para enlaces */
     text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.nav a:hover {
+    color: var(--celeste-medio); /* Cambio a celeste al hacer hover */
 }
 
 .container {
@@ -35,10 +42,11 @@ a {
     padding: 12px 24px;
     position: sticky;
     top: 0;
-    background: rgba(15, 15, 18, .8);
+    background: rgba(255, 255, 255, 0.95); /* Blanco con transparencia */
     backdrop-filter: blur(6px);
-    border-bottom: 1px solid #26262c;
+    border-bottom: 1px solid #e0e0e0; /* Borde gris claro */
     z-index: 10;
+    color: #333333; /* Texto oscuro */
 }
 
 .nav h1 {
@@ -48,7 +56,7 @@ a {
 
 .card {
     background: var(--card);
-    border: 1px solid #26262c;
+    border: 1px solid #e0e0e0; /* Borde gris claro */
     border-radius: 14px;
     padding: 16px;
 }
@@ -58,8 +66,8 @@ select {
     width: 100%;
     padding: 10px 12px;
     border-radius: 10px;
-    border: 1px solid #2a2a30;
-    background: #121216;
+    border: 1px solid #cccccc; /* Borde gris claro */
+    background: #ffffff; /* Blanco */
     color: var(--text);
 }
 
@@ -71,6 +79,30 @@ select {
     border-radius: 10px;
     cursor: pointer;
     font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn.celeste {
+    background: var(--celeste-medio); /* Celeste medio oscurito */
+}
+
+.btn.amarillo {
+    background: var(--amarillo); /* Amarillo */
+    color: #333333; /* Texto oscuro para contraste */
+}
+
+.btn.small {
+    padding: 6px 10px;
+    font-size: 12px;
 }
 
 .row {
@@ -101,25 +133,25 @@ select {
 }
 
 .badge.red {
-    background: #3b0f16;
-    color: #ff6b81;
-    border: 1px solid #5a1b26;
+    background: #ffebee; /* Fondo rojo claro */
+    color: #c62828; /* Texto rojo oscuro */
+    border: 1px solid #ffcdd2; /* Borde rojo claro */
 }
 
 .badge.yellow {
-    background: #3b2d0f;
-    color: #ffd166;
-    border: 1px solid #5a451b;
+    background: #fff8e1; /* Fondo amarillo claro */
+    color: #f57c00; /* Texto naranja oscuro */
+    border: 1px solid #ffecb3; /* Borde amarillo claro */
 }
 
 .badge.green {
-    background: #103b1b;
-    color: #66ff9a;
-    border: 1px solid #1b5a2c;
+    background: #e8f5e8; /* Fondo verde claro */
+    color: #2e7d32; /* Texto verde oscuro */
+    border: 1px solid #c8e6c9; /* Borde verde claro */
 }
 
 img.rec {
     width: 100%;
     border-radius: 12px;
-    border: 1px solid #26262c;
+    border: 1px solid #e0e0e0; /* Borde gris claro */
 }

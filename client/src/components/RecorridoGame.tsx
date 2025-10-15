@@ -208,8 +208,8 @@ export default function RecorridoGame() {
 
                     {/* Botones */}
                     <div className="col-12" style={{ display: 'flex', gap: 8 }}>
-                        <button className="btn" type="submit">{t('route.submit')}</button>
-                        <button className="btn" type="button" onClick={load}>{t('route.anotherImage')}</button>
+                        <button className="btn celeste" type="submit">{t('route.submit')}</button>
+                        <button className="btn amarillo" type="button" onClick={load}>{t('route.anotherImage')}</button>
                     </div>
                 </form>
 

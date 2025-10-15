@@ -37,7 +37,7 @@ export default function LoginForm() {
           <label>{t('login.password')}</label>
           <input className="input" type="password" value={password} onChange={e => setPassword(e.target.value)} />
           <div style={{ marginTop: 12 }}>
-            <button className="btn" type="submit">{t('login.submit')}</button>
+            <button className="btn celeste" type="submit">{t('login.submit')}</button>
           </div>
         </form>
         <p style={{ marginTop: 12 }}>

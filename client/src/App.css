@@ -3,6 +3,8 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background: #e6f3ff; /* Celeste clarito igual que el body */
+  min-height: 100vh; /* Asegurar que ocupe toda la altura */
 }
 
 .logo {

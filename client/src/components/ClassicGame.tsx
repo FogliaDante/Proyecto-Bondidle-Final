@@ -299,7 +299,7 @@ export default function ClassicGame() {
 
             {/* Botón de probar intento */}
             <div style={{ marginTop: 12 }}>
-              <button className="btn" type="submit">{t('classic.try')}</button>
+              <button className="btn celeste" type="submit">{t('classic.try')}</button>
             </div>
 
             {/* Mensaje de error */}

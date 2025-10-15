@@ -4,10 +4,10 @@ INSERT INTO Empresas (nombre) VALUES ('Transportes San Cayetano S.A.C.');
 INSERT INTO Empresa_Colectivo (id_colectivo, id_empresa) VALUES (1,1);
 INSERT INTO Colores (color) VALUES 
 	('Azul'),
-    ('Amarillo');
+  ('Amarillo');
 INSERT INTO Colectivo_Color (id_colectivo, id_color) VALUES 
 	(1,1),
-    (1,2);
+  (1,2);
 	
 SELECT 
   c.numero AS numero_colectivo,
@@ -25,4 +25,3 @@ JOIN Empresas e ON ec.id_empresa = e.id_empresa
 JOIN Colectivo_Color cc ON c.id_colectivo = cc.id_colectivo
 JOIN Colores col ON cc.id_color = col.id_color
 WHERE c.numero = 1;
-

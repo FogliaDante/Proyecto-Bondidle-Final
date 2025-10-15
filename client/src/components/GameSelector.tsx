@@ -10,8 +10,8 @@ export default function GameSelector() {
         <h2>{t('modes.title')}</h2>
         <p>{t('modes.desc')}</p>
         <div className="row" style={{ gap: 16, marginTop: 12 }}>
-          <Link className="btn" to="/classic">{t('modes.classic')}</Link>
-          <Link className="btn" to="/recorrido">{t('modes.recorrido')}</Link>
+          <Link className="btn celeste" to="/classic">{t('modes.classic')}</Link>
+          <Link className="btn amarillo" to="/recorrido">{t('modes.recorrido')}</Link>
         </div>
       </div>
     </div>

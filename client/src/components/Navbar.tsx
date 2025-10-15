@@ -10,7 +10,18 @@ export default function Navbar() {
 
   return (
     <nav className="nav">
-      <h1>{t('app.title')}</h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <img
+          src="/icono.png" // Cambia esto por la ruta de tu imagen
+          alt="Bondidle Icon"
+          style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '6px' // Opcional: redondear las esquinas
+          }}
+        />
+        <h1>{t('app.title')}</h1>
+      </div>
       <div style={{ flex: 1 }} />
       <Link to="/">{t('nav.home')}</Link>
       <Link to="/classic">{t('nav.classic')}</Link>
