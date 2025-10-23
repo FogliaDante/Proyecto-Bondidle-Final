@@ -26,9 +26,9 @@ export default function Navbar() {
       <Link to="/">{t('nav.home')}</Link>
       <Link to="/classic">{t('nav.classic')}</Link>
       <Link to="/recorrido">{t('nav.recorrido')}</Link>
-      {user && <Link to="/history">📜 Historial</Link>}
-      {user && <Link to="/ranking">🏆 Ranking</Link>}
-      {user && <Link to="/admin">🔧 Admin</Link>}
+      {user && <Link to="/history">📜 {t('nav.history')}</Link>}
+      {user && <Link to="/ranking">🏆 {t('nav.ranking')}</Link>}
+      {user && <Link to="/admin">🔧 {t('nav.admin')}</Link>}
       <div style={{ flex: 1 }} />
       <LanguageSwitcher />
       {user ? (

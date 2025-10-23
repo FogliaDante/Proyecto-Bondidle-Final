@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getGlobalRanking } from '../api/games';
+import { useI18n } from '../i18n';
 
 export default function Ranking() {
+  const { t } = useI18n();
   const [ranking, setRanking] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +34,7 @@ export default function Ranking() {
     return (
       <div className="container">
         <div className="card">
-          <h2>Cargando...</h2>
+          <h2>{t('history.loading')}</h2>
         </div>
       </div>
     );
@@ -41,14 +43,14 @@ export default function Ranking() {
   return (
     <div className="container">
       <div className="card">
-        <h2>🏆 Ranking Global</h2>
+        <h2>🏆 {t('ranking.title')}</h2>
         <p style={{ opacity: 0.7, marginTop: 8 }}>
-          Los mejores jugadores de Bondidle
+          {t('ranking.subtitle')}
         </p>
 
         {ranking.length === 0 ? (
           <p className="muted" style={{ marginTop: 16 }}>
-            No hay datos de ranking aún.
+            {t('ranking.noData')}
           </p>
         ) : (
           <div style={{ marginTop: 24 }}>
@@ -68,11 +70,11 @@ export default function Ranking() {
                 marginBottom: 8
               }}
             >
-              <div>Pos.</div>
-              <div>Jugador</div>
-              <div style={{ textAlign: 'center' }}>Jugados</div>
-              <div style={{ textAlign: 'center' }}>Ganados</div>
-              <div style={{ textAlign: 'center' }}>Prom. Int.</div>
+              <div>{t('ranking.position')}</div>
+              <div>{t('ranking.player')}</div>
+              <div style={{ textAlign: 'center' }}>{t('ranking.played')}</div>
+              <div style={{ textAlign: 'center' }}>{t('ranking.won')}</div>
+              <div style={{ textAlign: 'center' }}>{t('ranking.avgAttempts')}</div>
             </div>
 
             {/* Filas de ranking */}

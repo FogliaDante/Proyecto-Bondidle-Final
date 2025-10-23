@@ -48,7 +48,7 @@ export default function History() {
     return (
       <div className="container">
         <div className="card">
-          <h2>Cargando...</h2>
+          <h2>{t('history.loading')}</h2>
         </div>
       </div>
     );
@@ -59,31 +59,31 @@ export default function History() {
       {/* Estadísticas personales */}
       {stats && (
         <div className="card" style={{ marginBottom: 24 }}>
-          <h2>📊 Tus Estadísticas</h2>
+          <h2>📊 {t('history.stats')}</h2>
           <div className="grid" style={{ marginTop: 16 }}>
             <div className="col-3" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 32, fontWeight: 'bold', color: '#667eea' }}>
                 {stats.total_games || 0}
               </div>
-              <div style={{ fontSize: 14, opacity: 0.7 }}>Juegos Totales</div>
+              <div style={{ fontSize: 14, opacity: 0.7 }}>{t('history.totalGames')}</div>
             </div>
             <div className="col-3" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 32, fontWeight: 'bold', color: '#48bb78' }}>
                 {stats.games_won || 0}
               </div>
-              <div style={{ fontSize: 14, opacity: 0.7 }}>Juegos Ganados</div>
+              <div style={{ fontSize: 14, opacity: 0.7 }}>{t('history.gamesWon')}</div>
             </div>
             <div className="col-3" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 32, fontWeight: 'bold', color: '#f6ad55' }}>
                 {stats.avg_attempts_won ? Number(stats.avg_attempts_won).toFixed(1) : '—'}
               </div>
-              <div style={{ fontSize: 14, opacity: 0.7 }}>Promedio Intentos</div>
+              <div style={{ fontSize: 14, opacity: 0.7 }}>{t('history.avgAttempts')}</div>
             </div>
             <div className="col-3" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 32, fontWeight: 'bold', color: '#fc8181' }}>
                 {stats.best_attempts || '—'}
               </div>
-              <div style={{ fontSize: 14, opacity: 0.7 }}>Mejor Resultado</div>
+              <div style={{ fontSize: 14, opacity: 0.7 }}>{t('history.bestResult')}</div>
             </div>
           </div>
         </div>
@@ -91,11 +91,11 @@ export default function History() {
 
       {/* Historial de juegos */}
       <div className="card">
-        <h2>📜 Historial de Juegos</h2>
+        <h2>📜 {t('history.title')}</h2>
         
         {history.length === 0 ? (
           <p className="muted" style={{ marginTop: 16 }}>
-            No hay juegos registrados aún. ¡Empieza a jugar!
+            {t('history.noGames')}
           </p>
         ) : (
           <div style={{ marginTop: 16 }}>
@@ -115,16 +115,16 @@ export default function History() {
                     </strong>
                     {round.completed ? (
                       <span style={{ marginLeft: 12, color: '#48bb78', fontWeight: 'bold' }}>
-                        ✓ Completado
+                        ✓ {t('history.completed')}
                       </span>
                     ) : (
                       <span style={{ marginLeft: 12, color: '#fc8181' }}>
-                        ✗ No completado
+                        ✗ {t('history.notCompleted')}
                       </span>
                     )}
                   </div>
                   <div style={{ fontSize: 14, opacity: 0.7 }}>
-                    {round.attempts} {round.attempts === 1 ? 'intento' : 'intentos'}
+                    {round.attempts} {round.attempts === 1 ? t('history.attempt') : t('history.attempts')}
                   </div>
                 </div>
 
@@ -132,7 +132,7 @@ export default function History() {
                 {round.guesses && round.guesses.length > 0 && (
                   <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid rgba(0,0,0,0.1)' }}>
                     <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4, opacity: 0.6 }}>
-                      Intentos:
+                      {t('history.attemptsList')}
                     </div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                       {round.guesses.map((guess: any, gIdx: number) => (
