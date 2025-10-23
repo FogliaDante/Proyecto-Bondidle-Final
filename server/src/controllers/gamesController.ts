@@ -21,6 +21,9 @@ export async function classicGuess(req: Request, res: Response) {
   const { numero, ramalNombre } = req.body || {};
   if (!numero) return res.status(400).json({ error: 'numero requerido' });
 
+  const userId = (req as any).userId; // ID del usuario autenticado
+  const puzzleDate = new Date().toISOString().slice(0, 10); // Fecha del puzzle
+
   const picked = await pickDailyPair(); // Colectivo y ramal del día
   if (!picked) return res.status(404).json({ error: 'No hay datos para jugar' });
 
@@ -36,6 +39,12 @@ export async function classicGuess(req: Request, res: Response) {
 
   // Evaluar el feedback (rojo/amarillo/verde por campo)
   const feedback = evaluateClassic(target, guess);
+
+  // Verificar si el intento es correcto
+  const isCorrect = feedback.numero === 'green' && feedback.ramal === 'green';
+
+  // Guardar el intento en la base de datos
+  await saveClassicAttempt(userId, puzzleDate, numero, ramalNombre, isCorrect);
 
   // Devolver feedback y datos del intento al frontend
   res.json({ feedback, guess });
@@ -82,6 +91,51 @@ export async function recorridoAnswer(req: Request, res: Response) {
 // ==========================
 // HELPERS
 // ==========================
+
+// Guarda un intento de juego clásico en la base de datos
+async function saveClassicAttempt(userId: number, puzzleDate: string, numero: number, ramalNombre: string | undefined, isCorrect: boolean) {
+  const { pool } = await import('../db.js');
+  
+  // Buscar o crear round para este usuario y fecha
+  const [roundRows] = await pool.query(
+    `SELECT id_round, attempts, completed FROM ClassicRounds 
+     WHERE id_usuario = ? AND puzzle_date = ?`,
+    [userId, puzzleDate]
+  );
+  
+  let roundId: number;
+  let currentAttempts = 0;
+  
+  if ((roundRows as any[]).length === 0) {
+    // Crear nuevo round
+    const [result] = await pool.query(
+      `INSERT INTO ClassicRounds (id_usuario, puzzle_date, attempts, completed) 
+       VALUES (?, ?, 1, ?)`,
+      [userId, puzzleDate, isCorrect ? 1 : 0]
+    );
+    roundId = (result as any).insertId;
+    currentAttempts = 1;
+  } else {
+    // Actualizar round existente
+    const round = (roundRows as any[])[0];
+    roundId = round.id_round;
+    currentAttempts = round.attempts + 1;
+    
+    await pool.query(
+      `UPDATE ClassicRounds 
+       SET attempts = ?, completed = ? 
+       WHERE id_round = ?`,
+      [currentAttempts, isCorrect ? 1 : round.completed, roundId]
+    );
+  }
+  
+  // Guardar el intento específico
+  await pool.query(
+    `INSERT INTO ClassicGuesses (id_round, numero, ramal_nombre) 
+     VALUES (?, ?, ?)`,
+    [roundId, numero, ramalNombre || null]
+  );
+}
 
 // Devuelve snapshot completo de un ramal específico
 async function getColectivoSnapshotByRamal(id_ramal: number) {

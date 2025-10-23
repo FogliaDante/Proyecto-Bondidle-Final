@@ -6,6 +6,9 @@ import ClassicGame from './components/ClassicGame';
 import RecorridoGame from './components/RecorridoGame';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
+import History from './components/History';
+import Ranking from './components/Ranking';
+import AdminDashboard from './components/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import './styles.css';
 
@@ -18,6 +21,9 @@ export default function App() {
                 <Route path="/" element={<ProtectedRoute><GameSelector /></ProtectedRoute>} />
                 <Route path="/classic" element={<ProtectedRoute><ClassicGame /></ProtectedRoute>} />
                 <Route path="/recorrido" element={<ProtectedRoute><RecorridoGame /></ProtectedRoute>} />
+                <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+                <Route path="/ranking" element={<ProtectedRoute><Ranking /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/login" element={<LoginForm />} />
                 <Route path="/register" element={<RegisterForm />} />
             </Routes>
